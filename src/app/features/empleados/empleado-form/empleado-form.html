@@ -1,0 +1,64 @@
+<app-toolbar title="Panel principal"></app-toolbar>
+
+<div class="empleado-form-page">
+  <mat-card class="empleado-card">
+    <h1>Registrar empleado</h1>
+    <p class="subtitle">
+      Cargá los datos básicos, puestos y tipo de cobro.
+    </p>
+
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre y apellido</mat-label>
+        <input matInput formControlName="nombre" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>DNI</mat-label>
+        <input matInput formControlName="dni" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Puestos</mat-label>
+        <input
+          matInput
+          formControlName="puestosTexto"
+          placeholder="Ej: Cajero, Barra, Seguridad"
+        />
+        <mat-hint>Separá los puestos por coma.</mat-hint>
+      </mat-form-field>
+
+      <div class="tipo-cobro">
+        <span>Tipo de cobro</span>
+        <div class="checkbox-row">
+          <mat-checkbox formControlName="cobraPorHora">
+            Cobra por hora
+          </mat-checkbox>
+          <mat-checkbox formControlName="cobraPorDia">
+            Cobra por día
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <div class="acciones">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="cancelar()"
+          [disabled]="loading"
+        >
+          Cancelar
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="loading"
+        >
+          {{ loading ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

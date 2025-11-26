@@ -1,0 +1,105 @@
+// src/app/features/empleados/empleado-list/empleado-list.component.scss
+
+.empleados-page {
+  padding: 2rem;
+  background: linear-gradient(135deg, #e0f2fe, #fef9c3); // celeste + amarillo pastel
+  min-height: calc(100vh - 64px);
+
+  h1 {
+    margin: 0 0 0.3rem;
+    font-size: 1.8rem;
+    color: #1f2937;
+  }
+
+  .subtitle {
+    margin: 0 0 1.5rem;
+    color: #6b7280;
+    font-size: 0.95rem;
+  }
+}
+
+.table-wrapper {
+  background: #ffffffd9;
+  padding: 1.5rem;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+  backdrop-filter: blur(6px);
+}
+
+.empleados-table {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+
+  th.mat-header-cell {
+    font-weight: 600;
+    color: #374151;
+    background-color: #eef2ff;
+  }
+
+  td.mat-cell {
+    color: #111827;
+  }
+}
+
+.nombre-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .nombre {
+    font-weight: 500;
+  }
+}
+
+.puesto-chip {
+  background-color: #e0f2fe;
+  color: #1e3a8a;
+  font-size: 0.78rem;
+}
+
+.badge-tipo {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  background-color: #f5d0fe;
+  color: #6b21a8;
+}
+
+.estado {
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+
+  &.activo {
+    background-color: #bbf7d0;
+    color: #166534;
+  }
+
+  &.deshabilitado {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+}
+
+.acciones-header,
+.acciones-cell {
+  text-align: right;
+}
+
+.acciones-cell button + button {
+  margin-left: 0.25rem;
+}
+
+.row-deshabilitado {
+  opacity: 0.6;
+}
+
+.sin-datos {
+  margin-top: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.9rem;
+}

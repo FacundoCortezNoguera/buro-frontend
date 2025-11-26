@@ -1,0 +1,17 @@
+<mat-toolbar color="primary" class="toolbar">
+  
+  <!-- Botón Volver al menú -->
+  <button mat-icon-button (click)="goHome()" matTooltip="Volver al menú">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <!-- Título centrado -->
+  <span class="title">{{ title }}</span>
+
+  <span class="spacer"></span>
+
+  <!-- Logout -->
+  <button mat-icon-button (click)="logout()" matTooltip="Cerrar sesión">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>

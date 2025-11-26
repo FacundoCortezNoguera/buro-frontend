@@ -1,0 +1,54 @@
+// src/app/features/login/login.component.scss
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fce7f3, #ede9fe); // rosa y lila pastel
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 2rem 2.5rem;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+  background: #ffffffcc; // blanco ligeramente translúcido
+  backdrop-filter: blur(6px);
+}
+
+.app-title {
+  margin: 0;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #4c1d95; // lila más intenso
+}
+
+.app-subtitle {
+  margin: 0 0 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  margin-bottom: 1rem;
+}
+
+.extras-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+
+  mat-checkbox {
+    font-size: 0.85rem;
+  }
+}

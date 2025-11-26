@@ -1,0 +1,89 @@
+<!-- src/app/features/home/home.component.html -->
+
+<mat-toolbar color="primary" class="toolbar">
+  <span class="toolbar-title">Buro · Panel principal</span>
+
+  <span class="toolbar-spacer"></span>
+
+  <button mat-icon-button aria-label="Cerrar sesión" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="home-container">
+  <div class="welcome-block">
+    <h1>Bienvenido/a 👋</h1>
+    <p class="subtitle">
+      Elegí una acción para gestionar empleados y sus cobros.
+    </p>
+  </div>
+
+  <div class="cards-grid">
+    <!-- Card: Lista de empleados -->
+    <mat-card class="action-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon">
+          <mat-icon>group</mat-icon>
+        </div>
+        <mat-card-title>Lista de empleados</mat-card-title>
+        <mat-card-subtitle>Ver y gestionar el personal</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Consultá los empleados registrados, sus datos básicos y rol.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [routerLink]="['/empleados']">
+          Ir a lista
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Card: Registrar empleado -->
+    <mat-card class="action-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon">
+          <mat-icon>person_add</mat-icon>
+        </div>
+        <mat-card-title>Registrar empleado</mat-card-title>
+        <mat-card-subtitle>Alta de nuevo personal</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Cargá los datos de un nuevo empleado y definí su tipo de pago.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          mat-raised-button
+          color="primary"
+          [routerLink]="['/empleados/nuevo']"
+        >
+          Nuevo empleado
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Card: Hora de cobro -->
+    <mat-card class="action-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon">
+          <mat-icon>payments</mat-icon>
+        </div>
+        <mat-card-title>Hora de cobro</mat-card-title>
+        <mat-card-subtitle>Control de pagos</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Calculá y registrá el monto a cobrar de cada empleado.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [routerLink]="['/pagos']">
+          Ver pagos
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
