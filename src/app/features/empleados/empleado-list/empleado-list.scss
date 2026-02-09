@@ -103,3 +103,49 @@
   color: #6b7280;
   font-size: 0.9rem;
 }
+.filter {
+  width: 100%;
+  margin-top: 0.25rem;
+
+  mat-form-field {
+    font-size: 12px;
+  }
+}
+
+.th-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+}
+
+.filter-btn {
+  width: 32px;
+  height: 32px;
+  opacity: 0.75;
+}
+
+.filter-btn:hover {
+  opacity: 1;
+}
+
+.filter-pop {
+  padding: 0.75rem 0.9rem;
+  width: 260px;
+}
+
+.filter-field {
+  width: 100%;
+}
+
+.filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.table-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.75rem;
+}

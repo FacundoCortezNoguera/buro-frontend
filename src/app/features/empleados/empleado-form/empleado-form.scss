@@ -37,6 +37,30 @@ mat-form-field {
   margin-bottom: 1rem;
 }
 
+.tipo-pago-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #e0f2fe;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  border: 1px solid #7dd3fc;
+
+  mat-icon {
+    color: #0284c7;
+  }
+
+  span {
+    font-size: 0.9rem;
+    color: #0369a1;
+  }
+
+  strong {
+    color: #0c4a6e;
+  }
+}
+
 .tipo-cobro {
   margin: 0.5rem 0 1.5rem;
 
@@ -58,9 +82,42 @@ mat-form-field {
   }
 }
 
+.ajustes-section {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #fef3c7;
+  border-radius: 12px;
+  border: 1px solid #fcd34d;
+
+  h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    color: #92400e;
+  }
+
+  .hint {
+    margin: 0 0 1rem;
+    font-size: 0.85rem;
+    color: #a16207;
+  }
+}
+
+.ajustes-row {
+  display: flex;
+  gap: 1rem;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+  }
+}
+
+.ajuste-field {
+  flex: 1;
+}
+
 .acciones {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  margin-top: 0.5rem;
+  margin-top: 1.5rem;
 }

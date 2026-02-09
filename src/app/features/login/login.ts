@@ -11,6 +11,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
+import { Auth } from '../../core/services/auth/auth';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -29,13 +31,14 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 })
 export class Login {
 
-    form: FormGroup;
+  form: FormGroup;
   loading = false;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private auth: Auth
   ) {
     this.form = this.fb.group({
       usuario: ['', [Validators.required]],
@@ -52,18 +55,35 @@ export class Login {
       return;
     }
 
-    // 🔒 Mock de login (sin backend)
     this.loading = true;
+    const { usuario, password } = this.form.value;
 
-    setTimeout(() => {
-      this.loading = false;
-      // Guardamos flag de sesión mock
-      localStorage.setItem('isLoggedIn', 'true');
-      this.snackBar.open('Login exitoso (mock)', 'Cerrar', {
-        duration: 2000,
-      });
-      this.router.navigate(['/home']); // después creamos /home
-    }, 800);
+    this.auth.login(usuario, password).subscribe({
+      next: (success) => {
+        this.loading = false;
+        if (success) {
+          const route = this.auth.homeRoute();
+          console.log('Login exitoso. Usuario:', this.auth.user);
+          console.log('Navegando a:', route);
+          this.snackBar.open('Login exitoso', 'Cerrar', {
+            duration: 2000,
+          });
+          this.router.navigateByUrl(route).then(
+            (navigated) => console.log('Navegación exitosa:', navigated),
+            (error) => console.error('Error navegando:', error)
+          );
+        } else {
+          this.snackBar.open('Credenciales inválidas', 'Cerrar', {
+            duration: 3000,
+          });
+        }
+      },
+      error: () => {
+        this.loading = false;
+        this.snackBar.open('Error al conectar con el servidor', 'Cerrar', {
+          duration: 3000,
+        });
+      }
+    });
   }
-
 }

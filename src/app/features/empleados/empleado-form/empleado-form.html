@@ -1,42 +1,117 @@
-<app-toolbar title="Panel principal"></app-toolbar>
+<app-toolbar [title]="modo === 'editar' ? 'Editar empleado' : 'Registrar empleado'"></app-toolbar>
 
 <div class="empleado-form-page">
   <mat-card class="empleado-card">
-    <h1>Registrar empleado</h1>
+    <h1>{{ modo === 'editar' ? 'Editar empleado' : 'Registrar empleado' }}</h1>
     <p class="subtitle">
-      Cargá los datos básicos, puestos y tipo de cobro.
+      Cargá los datos básicos, cargo, días de trabajo y ajustes de salario.
     </p>
 
     <form [formGroup]="form" (ngSubmit)="guardar()">
+      <!-- Nombre -->
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Nombre y apellido</mat-label>
+        <mat-label>Nombre</mat-label>
         <input matInput formControlName="nombre" />
       </mat-form-field>
 
+      <!-- Apellido -->
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>DNI</mat-label>
-        <input matInput formControlName="dni" />
+        <mat-label>Apellido</mat-label>
+        <input matInput formControlName="apellido" />
       </mat-form-field>
 
+      <!-- Telefono -->
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Puestos</mat-label>
-        <input
-          matInput
-          formControlName="puestosTexto"
-          placeholder="Ej: Cajero, Barra, Seguridad"
-        />
-        <mat-hint>Separá los puestos por coma.</mat-hint>
+        <mat-label>Teléfono</mat-label>
+        <input matInput formControlName="telefono" placeholder="Ej: 11 5555-1234" />
       </mat-form-field>
 
-      <div class="tipo-cobro">
-        <span>Tipo de cobro</span>
-        <div class="checkbox-row">
-          <mat-checkbox formControlName="cobraPorHora">
-            Cobra por hora
-          </mat-checkbox>
-          <mat-checkbox formControlName="cobraPorDia">
-            Cobra por día
-          </mat-checkbox>
+      <!-- Documento -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Documento (DNI/CUIL)</mat-label>
+        <input matInput formControlName="documentoNumero" />
+      </mat-form-field>
+
+      <!-- Cargo (dinámico desde API) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Cargo</mat-label>
+        <mat-select formControlName="cargo">
+          @for (c of cargos; track c.id) {
+            <mat-option [value]="c.cargo">
+              {{ c.cargo }} ({{ c.tipoPago === 'HORA' ? 'por hora' : 'por día' }})
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Info del tipo de pago del cargo seleccionado -->
+      @if (cargoSeleccionado) {
+        <div class="tipo-pago-info">
+          <mat-icon>{{ cargoSeleccionado.tipoPago === 'HORA' ? 'schedule' : 'today' }}</mat-icon>
+          <span>
+            Este cargo cobra <strong>{{ cargoSeleccionado.tipoPago === 'HORA' ? 'por hora' : 'por día' }}</strong>
+            - Base: <strong>{{ cargoSeleccionado.tipoPago === 'HORA'
+              ? '$' + (cargoSeleccionado.montoPorHora | number:'1.0-0') + '/hora'
+              : '$' + (cargoSeleccionado.montoPorDia | number:'1.0-0') + '/día' }}</strong>
+          </span>
+        </div>
+      }
+
+      <!-- Días de trabajo -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Días de trabajo</mat-label>
+        <mat-select formControlName="diasTrabajo" multiple>
+          @for (d of diasSemana; track d) {
+            <mat-option [value]="d">
+              {{ diasSemanaLabels[d] }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-hint>Seleccioná los días que va a trabajar.</mat-hint>
+      </mat-form-field>
+
+      <!-- Monto por hora (solo si cargo cobra por hora) -->
+      @if (cargoSeleccionado?.tipoPago === 'HORA') {
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Monto por hora ($)</mat-label>
+          <input matInput type="number" formControlName="cobraPorHora" min="0" />
+          <mat-hint>Podés ajustar el monto base del cargo</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Horas por día (mínimo/planificado)</mat-label>
+          <input matInput type="number" formControlName="horasPorDia" min="1" />
+        </mat-form-field>
+      }
+
+      <!-- Monto por día (solo si cargo cobra por día) -->
+      @if (cargoSeleccionado?.tipoPago === 'DIA') {
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Monto por día ($)</mat-label>
+          <input matInput type="number" formControlName="cobraPorDia" min="0" />
+          <mat-hint>Podés ajustar el monto base del cargo</mat-hint>
+        </mat-form-field>
+      }
+
+      <!-- Sección de ajustes de salario -->
+      <div class="ajustes-section">
+        <h3>Ajustes de salario (opcional)</h3>
+        <p class="hint">Podés agregar un porcentaje o un monto fijo adicional al salario base.</p>
+
+        <div class="ajustes-row">
+          <mat-form-field appearance="outline" class="ajuste-field">
+            <mat-label>Ajuste porcentaje (%)</mat-label>
+            <input matInput type="number" formControlName="ajustePorcentaje" min="0" step="1" />
+            <span matSuffix>%</span>
+            <mat-hint>Ej: 10 = +10% sobre el base</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="ajuste-field">
+            <mat-label>Ajuste monto fijo ($)</mat-label>
+            <input matInput type="number" formControlName="ajusteMonto" min="0" step="100" />
+            <span matPrefix>$&nbsp;</span>
+            <mat-hint>Monto adicional fijo</mat-hint>
+          </mat-form-field>
         </div>
       </div>
 
@@ -50,13 +125,8 @@
           Cancelar
         </button>
 
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="loading"
-        >
-          {{ loading ? 'Guardando...' : 'Guardar' }}
+        <button mat-raised-button color="primary" [disabled]="loading">
+          {{ modo === 'editar' ? 'Guardar cambios' : 'Crear empleado' }}
         </button>
       </div>
     </form>

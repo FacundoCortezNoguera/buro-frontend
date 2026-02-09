@@ -1,0 +1,127 @@
+<mat-toolbar color="primary" class="toolbar">
+  <span class="toolbar-title">Buro · Panel de Administración</span>
+
+  <span class="toolbar-spacer"></span>
+
+  <span class="user-name">{{ userName }}</span>
+
+  <button mat-icon-button aria-label="Cerrar sesión" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="home-container">
+  <div class="welcome-block">
+    <h1>Panel de Administración</h1>
+    <p class="subtitle">
+      Gestioná la configuración de sueldos, usuarios y empleados del sistema.
+    </p>
+  </div>
+
+  <div class="cards-grid">
+    <!-- Card: Gestión de Sueldos -->
+    <mat-card class="action-card admin-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon salary-icon">
+          <mat-icon>attach_money</mat-icon>
+        </div>
+        <mat-card-title>Gestión de Sueldos</mat-card-title>
+        <mat-card-subtitle>Configurar tarifas base por cargo</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Configurá el monto base por hora y por día para cada cargo del sistema.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [routerLink]="['/admin/sueldos']">
+          Gestionar sueldos
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Card: Gestión de Usuarios -->
+    <mat-card class="action-card admin-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon users-icon">
+          <mat-icon>manage_accounts</mat-icon>
+        </div>
+        <mat-card-title>Gestión de Usuarios</mat-card-title>
+        <mat-card-subtitle>Administrar accesos al sistema</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Creá, editá o desactivá usuarios del sistema y asignales roles.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [routerLink]="['/admin/usuarios']">
+          Gestionar usuarios
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Card: Lista de empleados -->
+    <mat-card class="action-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon empleados-icon">
+          <mat-icon>group</mat-icon>
+        </div>
+        <mat-card-title>Lista de empleados</mat-card-title>
+        <mat-card-subtitle>Ver y gestionar el personal</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Consultá empleados, editá sus datos y configurá salarios individuales.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [routerLink]="['/empleados']">
+          Ir a lista
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Card: Configuración del Sistema -->
+    <mat-card class="action-card admin-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon config-icon">
+          <mat-icon>settings</mat-icon>
+        </div>
+        <mat-card-title>Configuración</mat-card-title>
+        <mat-card-subtitle>Ajustes del sistema</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Configurá el email para reportes, nombre del negocio y otros ajustes.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [routerLink]="['/admin/configuracion']">
+          Ir a configuración
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Card: Historial de Reportes -->
+    <mat-card class="action-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon reportes-icon">
+          <mat-icon>description</mat-icon>
+        </div>
+        <mat-card-title>Reportes</mat-card-title>
+        <mat-card-subtitle>Ver historial de cierres</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Consultá el historial de reportes generados y enviá por email.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [routerLink]="['/admin/reportes']">
+          Ver reportes
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

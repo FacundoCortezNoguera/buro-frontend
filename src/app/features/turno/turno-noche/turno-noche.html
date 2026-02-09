@@ -1,0 +1,98 @@
+<app-toolbar title="Turno noche"></app-toolbar>
+
+<div class="turno-page">
+  <div class="top">
+    <h1>Turno noche</h1>
+    <p class="subtitle">
+      Registro de asistencias · Hoy: {{ diaNombre }} · Hora esperada: {{ horaEsperada }}
+    </p>
+
+    <div class="top-actions">
+      <mat-form-field appearance="outline" class="cargo-filter">
+        <mat-label>Filtrar por cargo</mat-label>
+        <mat-select [(value)]="cargoFiltro">
+          <mat-option value="Todos">Todos</mat-option>
+          <mat-option *ngFor="let c of cargos" [value]="c">{{ c }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button (click)="cargar()">
+        <mat-icon>refresh</mat-icon>
+        Actualizar
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Cargando...
+  </div>
+
+  <div class="grid" *ngIf="!loading && rowsFiltradas.length > 0; else sinEmpleados">
+    <mat-card class="card" *ngFor="let r of rowsFiltradas" [ngClass]="{'presente': r.asistencia, 'ausente': !r.asistencia}">
+      <mat-card-title>
+        {{ r.empleado.nombre }} {{ r.empleado.apellido }}
+      </mat-card-title>
+
+      <mat-card-subtitle>
+        Doc: {{ r.empleado.documentoNumero }} · {{ r.empleado.telefono || 'Sin teléfono' }}
+      </mat-card-subtitle>
+
+      <mat-card-content>
+        <!-- Cargo asignado para esta noche (editable) -->
+        <div class="cargo-row">
+          <mat-form-field appearance="outline" class="cargo-select">
+            <mat-label>Cargo esta noche</mat-label>
+            <mat-select [(value)]="r.cargoAsignado" (selectionChange)="onCargoChange(r)">
+              <mat-option *ngFor="let c of cargos" [value]="c">{{ c }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <span class="cargo-original" *ngIf="r.cargoAsignado !== r.empleado.cargo">
+            (Original: {{ r.empleado.cargo }})
+          </span>
+        </div>
+
+        <!-- Estado de asistencia -->
+        <div class="asistencia-info">
+          <ng-container *ngIf="r.asistencia; else sinAsistencia">
+            <div class="estado-badge" [ngClass]="getEstadoClass(r.asistencia.estado)">
+              <mat-icon>{{ r.asistencia.estado === 'TARDE' ? 'warning' : r.asistencia.estado === 'TEMPRANO' ? 'thumb_up' : 'check_circle' }}</mat-icon>
+              <span>{{ getEstadoLabel(r.asistencia) }}</span>
+            </div>
+            <div class="hora-llegada">
+              <mat-icon>schedule</mat-icon>
+              Llegó: <strong>{{ r.asistencia.horaLlegada }}</strong>
+            </div>
+          </ng-container>
+
+          <ng-template #sinAsistencia>
+            <div class="estado-badge estado-ausente">
+              <mat-icon>person_off</mat-icon>
+              <span>Sin registrar</span>
+            </div>
+            <div class="hora-llegada pendiente">
+              Esperando registro de cámara...
+            </div>
+          </ng-template>
+        </div>
+
+        <!-- Checkbox cena para Seguridad -->
+        <div class="cena-row" *ngIf="r.cargoAsignado === 'Seguridad'">
+          <mat-checkbox [(ngModel)]="r.empezoEnCena" (change)="onCenaChange(r)">
+            Empezó en la cena
+          </mat-checkbox>
+        </div>
+
+        <!-- Observaciones (solo lectura) -->
+        <div class="observaciones" *ngIf="r.asistencia?.observaciones">
+          <span class="label">Obs:</span> {{ r.asistencia?.observaciones }}
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <ng-template #sinEmpleados>
+    <div class="no-data" *ngIf="!loading">
+      No hay empleados asignados para hoy ({{ diaNombre }}) o el filtro no trae resultados.
+    </div>
+  </ng-template>
+</div>

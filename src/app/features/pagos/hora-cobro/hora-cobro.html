@@ -1,116 +1,18 @@
-<app-toolbar title="Hora de cobro"></app-toolbar>
+<app-toolbar title="Pagos"></app-toolbar>
 
 <div class="pagos-page">
-  <div class="header-row">
-    <h1>Hora de cobro</h1>
-    <p class="subtitle">
-      Calculá las horas/días trabajados y registrá quién cobró al finalizar la jornada.
-    </p>
+  <h1>Pagos</h1>
+  <p class="subtitle">
+    Gestión de cobros por día/semana y por hora.
+  </p>
 
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="calcularCobrosDelDia()"
-    >
-      <mat-icon>schedule</mat-icon>
-      <span>Calcular horas del día</span>
-    </button>
-  </div>
+  <mat-tab-group>
+    <mat-tab label="Cobro por día/semana">
+      <app-pagos-dia></app-pagos-dia>
+    </mat-tab>
 
-  <div class="cards-container" *ngIf="listaCobros.length > 0; else noDatos">
-    <div
-      class="cobro-card-wrapper"
-      *ngFor="let cobro of listaCobros"
-      (click)="cardClicked(cobro)"
-    >
-      <mat-card
-        class="cobro-card"
-        [class.cobrado]="cobro.cobrado"
-        [class.pendiente]="!cobro.cobrado"
-      >
-        <mat-card-header>
-          <div mat-card-avatar class="avatar">
-            <mat-icon>person</mat-icon>
-          </div>
-          <mat-card-title>{{ cobro.empleado.nombre }}</mat-card-title>
-          <mat-card-subtitle>
-            DNI {{ cobro.empleado.dni }}
-          </mat-card-subtitle>
-        </mat-card-header>
-
-        <mat-card-content>
-          <div class="puestos">
-            <span>Puestos:</span>
-            <mat-chip-set>
-              <mat-chip *ngFor="let p of cobro.empleado.puestos">
-                {{ p }}
-              </mat-chip>
-            </mat-chip-set>
-          </div>
-
-          <div class="detalle-row">
-            <div class="detalle-item">
-              <span class="label">Horas trabajadas</span>
-              <span class="value">{{ cobro.horasTrabajadas }}</span>
-            </div>
-            <div class="detalle-item">
-              <span class="label">Días trabajados</span>
-              <span class="value">{{ cobro.diasTrabajados }}</span>
-            </div>
-          </div>
-
-          <div class="detalle-row">
-            <div class="detalle-item">
-              <span class="label">Descuento tardanza</span>
-              <span class="value">$ {{ cobro.descuentoTardanza }}</span>
-            </div>
-            <div class="detalle-item">
-              <span class="label">Adelanto</span>
-              <span class="value">$ {{ cobro.adelanto }}</span>
-            </div>
-          </div>
-
-          <div class="total-row">
-            <span class="label">Total a cobrar</span>
-            <span class="total">$ {{ cobro.montoCalculado }}</span>
-          </div>
-
-          <div class="estado-row">
-            <span
-              class="estado-badge"
-              [class.estado-cobrado]="cobro.cobrado"
-              [class.estado-pendiente]="!cobro.cobrado"
-            >
-              {{ cobro.cobrado ? 'Cobrado' : 'Pendiente de cobro' }}
-            </span>
-          </div>
-        </mat-card-content>
-
-        <mat-card-actions>
-          <button
-            mat-stroked-button
-            color="primary"
-            (click)="toggleCobrado(cobro); $event.stopPropagation()"
-          >
-            {{ cobro.cobrado ? 'Marcar como pendiente' : 'Marcar como cobrado' }}
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
-  </div>
-
-  <ng-template #noDatos>
-    <div class="no-datos">
-      Aún no se calcularon las horas del día.
-      <br />
-      Usá el botón <strong>“Calcular horas del día”</strong> para comenzar.
-    </div>
-  </ng-template>
-
-  <div class="footer-acciones" *ngIf="listaCobros.length > 0">
-    <button mat-raised-button color="accent" (click)="finalizarDia()">
-      <mat-icon>done_all</mat-icon>
-      <span>Finalizar día</span>
-    </button>
-  </div>
+    <mat-tab label="Cobro por hora">
+      <app-pagos-hora></app-pagos-hora>
+    </mat-tab>
+  </mat-tab-group>
 </div>

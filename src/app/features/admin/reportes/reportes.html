@@ -1,0 +1,113 @@
+<app-toolbar title="Historial de Reportes" backRoute="/home-admin"></app-toolbar>
+
+<div class="reportes-container">
+  <mat-card class="reportes-card">
+    <mat-card-header>
+      <mat-card-title>Reportes Generados</mat-card-title>
+      <mat-card-subtitle>Historial de cierres de noche y reportes del sistema</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (loading) {
+        <div class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+          <span>Cargando reportes...</span>
+        </div>
+      } @else if (reportes.length === 0) {
+        <div class="empty-state">
+          <mat-icon>description</mat-icon>
+          <p>No hay reportes generados</p>
+          <span>Los reportes se generan automáticamente al cerrar cada noche</span>
+        </div>
+      } @else {
+        <table mat-table [dataSource]="reportes" class="reportes-table">
+          <!-- Fecha Column -->
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef>Fecha</th>
+            <td mat-cell *matCellDef="let reporte">
+              <div class="fecha-cell">
+                <mat-icon>calendar_today</mat-icon>
+                <span>{{ formatFecha(reporte.fechaReporte) }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Titulo Column -->
+          <ng-container matColumnDef="titulo">
+            <th mat-header-cell *matHeaderCellDef>Título</th>
+            <td mat-cell *matCellDef="let reporte">
+              <span class="titulo">{{ reporte.titulo }}</span>
+              <span class="tipo-badge">{{ getTipoLabel(reporte.tipo) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Empleados Column -->
+          <ng-container matColumnDef="empleados">
+            <th mat-header-cell *matHeaderCellDef>Empleados</th>
+            <td mat-cell *matCellDef="let reporte">
+              <span class="empleados-count">{{ reporte.cantidadEmpleados || 0 }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Total Column -->
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef>Total</th>
+            <td mat-cell *matCellDef="let reporte">
+              <span class="monto">{{ formatMonto(reporte.totalMonto) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Estado Column -->
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let reporte">
+              @if (reporte.enviado) {
+                <span class="estado-chip enviado" [matTooltip]="'Enviado a ' + reporte.emailDestino">
+                  <mat-icon>check_circle</mat-icon>
+                  Enviado
+                </span>
+              } @else {
+                <span class="estado-chip pendiente">
+                  <mat-icon>schedule</mat-icon>
+                  Pendiente
+                </span>
+              }
+            </td>
+          </ng-container>
+
+          <!-- Acciones Column -->
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let reporte">
+              <button mat-icon-button color="primary" (click)="descargarPdf(reporte)" matTooltip="Descargar PDF">
+                <mat-icon>download</mat-icon>
+              </button>
+              <button mat-icon-button color="accent" (click)="enviarPorEmail(reporte)"
+                      [disabled]="enviando" matTooltip="Enviar por email">
+                <mat-icon>send</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Info Card -->
+  <mat-card class="info-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>info</mat-icon>
+      <mat-card-title>Información</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li><strong>Descargar:</strong> Descargá el PDF del reporte para revisarlo o imprimirlo.</li>
+        <li><strong>Enviar:</strong> Enviá el reporte por email a la dirección configurada en el sistema.</li>
+        <li>Podés configurar el email de destino en la sección de <strong>Configuración</strong>.</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>

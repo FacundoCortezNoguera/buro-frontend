@@ -1,0 +1,119 @@
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.toolbar-title {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.user-name {
+  margin-right: 1rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.home-container {
+  min-height: calc(100vh - 64px);
+  padding: 2rem;
+  background: linear-gradient(135deg, #fef3c7, #e0f2fe, #fce7f3);
+}
+
+.welcome-block {
+  max-width: 600px;
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0 0 0.5rem;
+    font-size: 1.9rem;
+    color: #1f2933;
+  }
+
+  .subtitle {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.95rem;
+  }
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.action-card {
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+
+  mat-card-content {
+    font-size: 0.95rem;
+    color: #4b5563;
+  }
+
+  mat-card-actions {
+    padding: 1rem 1.5rem 1.3rem;
+  }
+}
+
+.admin-card {
+  border: 2px solid #c4b5fd;
+}
+
+.card-icon {
+  background: #fce7f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    color: #db2777;
+  }
+}
+
+.salary-icon {
+  background: #d1fae5;
+
+  mat-icon {
+    color: #10b981;
+  }
+}
+
+.users-icon {
+  background: #e0e7ff;
+
+  mat-icon {
+    color: #6366f1;
+  }
+}
+
+.empleados-icon {
+  background: #fef3c7;
+
+  mat-icon {
+    color: #f59e0b;
+  }
+}
+
+.config-icon {
+  background: #f3e8ff;
+
+  mat-icon {
+    color: #9333ea;
+  }
+}
+
+.reportes-icon {
+  background: #cffafe;
+
+  mat-icon {
+    color: #0891b2;
+  }
+}

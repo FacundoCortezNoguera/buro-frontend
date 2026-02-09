@@ -55,12 +55,31 @@
         </p>
       </mat-card-content>
       <mat-card-actions>
-        <button
-          mat-raised-button
-          color="primary"
-          [routerLink]="['/empleados/nuevo']"
-        >
+        <button mat-raised-button color="primary" [routerLink]="['/empleados/nuevo']">
           Nuevo empleado
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Card: Turno Noche -->
+    <mat-card class="action-card night-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon night-icon">
+          <mat-icon>nightlight</mat-icon>
+        </div>
+        <mat-card-title>Turno noche</mat-card-title>
+        <mat-card-subtitle>Ingreso, retardo y cambios</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p>
+          Registrá hora de entrada, retardo, cambios de puesto y control especial de seguridad.
+        </p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [routerLink]="['/turno-noche']">
+          Ver turno noche
         </button>
       </mat-card-actions>
     </mat-card>

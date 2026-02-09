@@ -1,0 +1,145 @@
+<app-toolbar title="Gestión de Usuarios" backRoute="/home-admin"></app-toolbar>
+
+<div class="usuarios-container">
+  <!-- Formulario de nuevo usuario -->
+  <mat-card class="form-card" [class.expanded]="showForm">
+    <mat-card-header>
+      <mat-card-title>
+        @if (showForm) {
+          Nuevo Usuario
+        } @else {
+          Usuarios del Sistema
+        }
+      </mat-card-title>
+      <span class="spacer"></span>
+      <button mat-raised-button [color]="showForm ? 'warn' : 'primary'" (click)="toggleForm()">
+        <mat-icon>{{ showForm ? 'close' : 'person_add' }}</mat-icon>
+        {{ showForm ? 'Cancelar' : 'Nuevo Usuario' }}
+      </button>
+    </mat-card-header>
+
+    @if (showForm) {
+      <mat-card-content class="form-content">
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre de usuario</mat-label>
+            <input matInput [(ngModel)]="nuevoUsuario.username" placeholder="ej: juan.perez">
+            <mat-icon matPrefix>person</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre completo</mat-label>
+            <input matInput [(ngModel)]="nuevoUsuario.nombre" placeholder="ej: Juan Pérez">
+            <mat-icon matPrefix>badge</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input matInput type="password" [(ngModel)]="nuevoUsuario.password" placeholder="Contraseña inicial">
+            <mat-icon matPrefix>lock</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Rol</mat-label>
+            <mat-select [(ngModel)]="nuevoUsuario.role">
+              @for (role of roles; track role) {
+                <mat-option [value]="role">{{ role }}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matPrefix>admin_panel_settings</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" (click)="crearUsuario()" [disabled]="saving">
+            <mat-icon>save</mat-icon>
+            Crear Usuario
+          </button>
+        </div>
+      </mat-card-content>
+    }
+  </mat-card>
+
+  <!-- Tabla de usuarios -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      @if (loading) {
+        <div class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+          <span>Cargando usuarios...</span>
+        </div>
+      } @else {
+        <table mat-table [dataSource]="usuarios" class="usuarios-table">
+          <!-- Username Column -->
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef>Usuario</th>
+            <td mat-cell *matCellDef="let usuario">
+              <div class="user-cell">
+                <mat-icon class="user-icon">account_circle</mat-icon>
+                <span>{{ usuario.username }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Nombre Column -->
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let usuario">{{ usuario.nombre }}</td>
+          </ng-container>
+
+          <!-- Role Column -->
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>Rol</th>
+            <td mat-cell *matCellDef="let usuario">
+              <span class="role-chip" [class]="'role-' + usuario.role.toLowerCase()">
+                {{ usuario.role }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Enabled Column -->
+          <ng-container matColumnDef="enabled">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let usuario">
+              <mat-slide-toggle
+                [checked]="usuario.enabled"
+                (change)="toggleEnabled(usuario)"
+                color="primary">
+                {{ usuario.enabled ? 'Activo' : 'Inactivo' }}
+              </mat-slide-toggle>
+            </td>
+          </ng-container>
+
+          <!-- Acciones Column -->
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let usuario">
+              <button mat-icon-button color="primary" (click)="resetPassword(usuario)" matTooltip="Resetear contraseña">
+                <mat-icon>lock_reset</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Info Card -->
+  <mat-card class="info-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>info</mat-icon>
+      <mat-card-title>Roles del Sistema</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li><strong>ADMIN:</strong> Acceso completo a todas las funciones.</li>
+        <li><strong>RRHH:</strong> Gestión de empleados, turnos y cálculo de pagos.</li>
+        <li><strong>CAJA:</strong> Registro de pagos realizados.</li>
+        <li><strong>SUPERVISOR:</strong> Registro de turnos y cierre nocturno.</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>

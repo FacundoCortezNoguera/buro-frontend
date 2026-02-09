@@ -1,0 +1,102 @@
+<app-toolbar title="Cambios de Empleados" backRoute="/home-admin"></app-toolbar>
+
+<div class="cambios-container">
+  <mat-card class="table-card">
+    <mat-tab-group [(selectedIndex)]="selectedTab" color="primary">
+      <mat-tab label="Pendientes ({{ pendientes.length }})"></mat-tab>
+      <mat-tab label="Todos ({{ cambios.length }})"></mat-tab>
+    </mat-tab-group>
+
+    <mat-card-content>
+      @if (loading) {
+        <div class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+          <span>Cargando cambios...</span>
+        </div>
+      } @else if (dataActual.length === 0) {
+        <div class="empty-state">
+          <mat-icon>swap_horiz</mat-icon>
+          @if (selectedTab === 0) {
+            <p>No hay cambios pendientes de aprobación</p>
+          } @else {
+            <p>No hay cambios registrados</p>
+          }
+        </div>
+      } @else {
+        <table mat-table [dataSource]="dataActual" class="cambios-table">
+          <!-- Empleado -->
+          <ng-container matColumnDef="empleado">
+            <th mat-header-cell *matHeaderCellDef>Empleado</th>
+            <td mat-cell *matCellDef="let cambio">
+              <strong>{{ cambio.empleadoNombre }}</strong>
+            </td>
+          </ng-container>
+
+          <!-- Tipo Cambio -->
+          <ng-container matColumnDef="tipoCambio">
+            <th mat-header-cell *matHeaderCellDef>Tipo</th>
+            <td mat-cell *matCellDef="let cambio">
+              {{ getTipoCambioLabel(cambio.tipoCambio) }}
+            </td>
+          </ng-container>
+
+          <!-- Cambio (anterior → nuevo) -->
+          <ng-container matColumnDef="cambio">
+            <th mat-header-cell *matHeaderCellDef>Cambio</th>
+            <td mat-cell *matCellDef="let cambio">
+              <div class="cambio-valores">
+                <span class="old-val">{{ cambio.valorAnterior || 'N/A' }}</span>
+                <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+                <span class="new-val">{{ cambio.valorNuevo }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Estado -->
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let cambio">
+              <span class="estado-chip" [class]="getEstadoClass(cambio.estado)">
+                {{ getEstadoLabel(cambio.estado) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Solicitado Por -->
+          <ng-container matColumnDef="solicitadoPor">
+            <th mat-header-cell *matHeaderCellDef>Solicitado por</th>
+            <td mat-cell *matCellDef="let cambio">{{ cambio.solicitadoPor }}</td>
+          </ng-container>
+
+          <!-- Fecha -->
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef>Fecha</th>
+            <td mat-cell *matCellDef="let cambio">
+              {{ cambio.createdAt | date:'dd/MM/yyyy HH:mm' }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Info -->
+  <mat-card class="info-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>info</mat-icon>
+      <mat-card-title>Flujo de Aprobación</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li><strong>1.</strong> RRHH/Admin propone un cambio (cargo, sueldo, tarifa).</li>
+        <li><strong>2.</strong> Se envía un email con link de aprobación a los destinatarios configurados.</li>
+        <li><strong>3.</strong> El link permite aprobar o rechazar sin necesidad de iniciar sesión.</li>
+        <li><strong>4.</strong> Al aprobar, el cambio se aplica automáticamente al empleado.</li>
+        <li><strong>5.</strong> Los links expiran a las 48 horas.</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>

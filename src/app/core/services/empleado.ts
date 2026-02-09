@@ -1,67 +1,39 @@
 import { Injectable } from '@angular/core';
-import { Empleado } from '../model/empleado.model';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { Empleado, EmpleadoCreate } from '../model/empleado.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmpleadoService {
-    private empleados: Empleado[] = [
-    {
-      id: 1,
-      nombre: 'Juan Pérez',
-      dni: '30111222',
-      puestos: ['Cajero'],
-      cobraPorHora: true,
-      cobraPorDia: false,
-      activo: true,
-    },
-    {
-      id: 2,
-      nombre: 'Ana Gómez',
-      dni: '28999888',
-      puestos: ['RRHH', 'Administración'],
-      cobraPorHora: false,
-      cobraPorDia: true,
-      activo: true,
-    },
-    {
-      id: 3,
-      nombre: 'Carlos Ruiz',
-      dni: '33123456',
-      puestos: ['Seguridad'],
-      cobraPorHora: true,
-      cobraPorDia: true,
-      activo: false,
-    },
-  ];
+  private readonly apiUrl = `${environment.apiUrl}/api/empleados`;
 
-  getEmpleados(): Empleado[] {
-    return [...this.empleados];
+  constructor(private http: HttpClient) {}
+
+  getEmpleados(soloActivos: boolean = false): Observable<Empleado[]> {
+    const params = new HttpParams().set('soloActivos', soloActivos.toString());
+    return this.http.get<Empleado[]>(this.apiUrl, { params });
   }
 
-  toggleActivo(id: number): void {
-    const emp = this.empleados.find((e) => e.id === id);
-    if (emp) {
-      emp.activo = !emp.activo;
-    }
+  getById(id: number): Observable<Empleado> {
+    return this.http.get<Empleado>(`${this.apiUrl}/${id}`);
   }
 
-  eliminar(id: number): void {
-    this.empleados = this.empleados.filter((e) => e.id !== id);
+  agregar(empleado: EmpleadoCreate): Observable<Empleado> {
+    return this.http.post<Empleado>(this.apiUrl, empleado);
   }
 
-   agregar(datos: Omit<Empleado, 'id'>): void {
-    const nuevoId =
-      this.empleados.length > 0
-        ? Math.max(...this.empleados.map((e) => e.id)) + 1
-        : 1;
-
-    const nuevo: Empleado = {
-      id: nuevoId,
-      ...datos,
-    };
-
-    this.empleados.push(nuevo);
+  update(id: number, empleado: EmpleadoCreate): Observable<Empleado> {
+    return this.http.put<Empleado>(`${this.apiUrl}/${id}`, empleado);
   }
-  
+
+  toggleActivo(id: number): Observable<Empleado> {
+    return this.http.patch<Empleado>(`${this.apiUrl}/${id}/toggle-activo`, {});
+  }
+
+  eliminar(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

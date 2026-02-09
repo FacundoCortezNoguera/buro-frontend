@@ -1,0 +1,165 @@
+.aprobar-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.logo-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: white;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 4px;
+  }
+
+  p {
+    margin: 0.25rem 0 0;
+    opacity: 0.8;
+    font-size: 0.9rem;
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+  margin-top: 3rem;
+}
+
+.cambio-card {
+  max-width: 500px;
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+
+  mat-card-header {
+    .header-icon {
+      background: #4F46E5;
+      color: white;
+      border-radius: 50%;
+      padding: 8px;
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  mat-card-content {
+    padding-top: 1rem;
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem 1.5rem;
+  }
+}
+
+.detail-grid {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #e5e7eb;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.9rem;
+  }
+
+  .value {
+    color: #6b7280;
+  }
+
+  .old-value {
+    color: #ef4444;
+    text-decoration: line-through;
+  }
+
+  .new-value {
+    color: #22c55e;
+    font-weight: 600;
+  }
+}
+
+.btn-aprobar {
+  background: #22c55e !important;
+  color: white !important;
+  padding: 0 2rem;
+}
+
+.btn-rechazar {
+  background: #ef4444 !important;
+  color: white !important;
+  padding: 0 2rem;
+}
+
+.result-card {
+  max-width: 500px;
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  padding: 2rem 1rem;
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h2 {
+    margin: 1rem 0 0.5rem;
+    color: #1f2937;
+  }
+
+  p {
+    color: #6b7280;
+  }
+
+  &.aprobado {
+    border-top: 4px solid #22c55e;
+  }
+
+  &.rechazado, &.error-card {
+    border-top: 4px solid #ef4444;
+  }
+}
+
+.result-icon {
+  font-size: 56px;
+  width: 56px;
+  height: 56px;
+
+  &.success {
+    color: #22c55e;
+  }
+
+  &.rejected, &.error {
+    color: #ef4444;
+  }
+
+  &.info {
+    color: #3b82f6;
+  }
+}

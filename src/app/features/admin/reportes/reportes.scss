@@ -1,0 +1,161 @@
+.reportes-container {
+  padding: 2rem;
+  background: linear-gradient(135deg, #cffafe, #fef3c7, #fce7f3);
+  min-height: calc(100vh - 64px);
+}
+
+.reportes-card {
+  max-width: 1000px;
+  margin: 0 auto 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem;
+  color: #9ca3af;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #6b7280;
+  }
+
+  span {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+.reportes-table {
+  width: 100%;
+
+  th.mat-header-cell {
+    font-weight: 600;
+    color: #374151;
+    background: #f3f4f6;
+  }
+
+  td.mat-cell {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+  }
+}
+
+.fecha-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #6366f1;
+  }
+}
+
+.titulo {
+  display: block;
+  font-weight: 500;
+}
+
+.tipo-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  background: #e0f2fe;
+  color: #0369a1;
+  border-radius: 8px;
+  margin-top: 0.25rem;
+}
+
+.empleados-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 50%;
+  font-weight: 600;
+}
+
+.monto {
+  font-weight: 600;
+  color: #059669;
+  font-size: 1rem;
+}
+
+.estado-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &.enviado {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  &.pendiente {
+    background: #fef3c7;
+    color: #92400e;
+  }
+}
+
+.info-card {
+  max-width: 1000px;
+  margin: 0 auto;
+  border-radius: 16px;
+  background: #e0f2fe;
+
+  mat-icon[mat-card-avatar] {
+    background: #0ea5e9;
+    color: white;
+    border-radius: 50%;
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.5rem;
+
+    li {
+      margin-bottom: 0.5rem;
+      color: #4b5563;
+    }
+  }
+}

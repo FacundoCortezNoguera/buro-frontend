@@ -1,0 +1,27 @@
+<button
+  mat-icon-button
+  [matMenuTriggerFor]="menu"
+  [matTooltip]="tooltip || ('Filtrar por ' + label)"
+  class="filter-btn"
+  (click)="$event.stopPropagation()"
+>
+  <mat-icon>search</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu" class="filter-menu">
+  <div class="filter-pop" (click)="$event.stopPropagation()">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>{{ label }}</mat-label>
+      <input
+        matInput
+        [value]="value"
+        (input)="onInput($any($event.target).value)"
+        placeholder="Buscar..."
+      />
+    </mat-form-field>
+
+    <div class="filter-actions">
+      <button mat-stroked-button (click)="onClear()">Limpiar</button>
+    </div>
+  </div>
+</mat-menu>

@@ -1,0 +1,268 @@
+.pagos-dia {
+  padding: 1.5rem;
+  min-height: calc(100vh - 64px);
+  background: linear-gradient(135deg, #ede9fe, #cffafe);
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.cargo-filter {
+  min-width: 260px;
+}
+
+.period-box {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.period-title {
+  font-weight: 600;
+  color: #374151;
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 8px;
+}
+
+// Loading
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem;
+  color: #6b7280;
+}
+
+// Cash card (totales)
+.cash-card {
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.cash-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.cash-title {
+  color: #6b7280;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.warn {
+    color: #dc2626;
+  }
+}
+
+.cash-total {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-top: 0.25rem;
+  color: #111827;
+
+  &.warn {
+    color: #dc2626;
+  }
+
+  &.highlight {
+    color: #059669;
+  }
+}
+
+.cash-breakdown {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.bd-title {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.bd-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.bd-chip {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #1d4ed8;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+// Grid de empleados
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 1rem;
+}
+
+.emp-card {
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+// Summary dentro de cada card
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.summary .label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+.summary .value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 0.15rem;
+
+  &.warn {
+    color: #dc2626;
+  }
+
+  &.highlight {
+    color: #059669;
+  }
+}
+
+// Items (días)
+.items {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #f9fafb;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.pagado {
+    opacity: 0.6;
+  }
+}
+
+.date {
+  font-weight: 700;
+  color: #111827;
+}
+
+.hora {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.estado-chip {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+
+  &.estado-temprano {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  &.estado-puntual {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  &.estado-tarde {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+}
+
+.amount {
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  &.pend {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  &.ok {
+    background: #d1fae5;
+    color: #065f46;
+  }
+}
+
+// Extras
+.extras {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.extras-title {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+// No data
+.no-data {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+}

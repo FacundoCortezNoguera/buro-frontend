@@ -1,0 +1,182 @@
+.turno-page {
+  min-height: calc(100vh - 64px);
+  padding: 2rem;
+  background: linear-gradient(135deg, #ede9fe, #cffafe);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.top h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.8rem;
+}
+
+.subtitle {
+  margin: 0.25rem 0 1rem;
+  color: #6b7280;
+}
+
+.top-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cargo-filter {
+  min-width: 260px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  border-radius: 18px;
+  background: #ffffffd9;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.16);
+  transition: border-color 0.3s, opacity 0.3s;
+
+  &.presente {
+    border-left: 4px solid #22c55e;
+  }
+
+  &.ausente {
+    border-left: 4px solid #9ca3af;
+    opacity: 0.9;
+  }
+}
+
+// Cargo row
+.cargo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.cargo-select {
+  flex: 1;
+  min-width: 180px;
+}
+
+.cargo-original {
+  font-size: 0.8rem;
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+// Asistencia info
+.asistencia-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+}
+
+.estado-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  width: fit-content;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &.estado-temprano {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  &.estado-puntual {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  &.estado-tarde {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  &.estado-ausente {
+    background: #f3f4f6;
+    color: #6b7280;
+  }
+}
+
+.hora-llegada {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: #374151;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #6b7280;
+  }
+
+  strong {
+    color: #111827;
+  }
+
+  &.pendiente {
+    color: #9ca3af;
+    font-style: italic;
+  }
+}
+
+// Cena checkbox
+.cena-row {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+// Observaciones
+.observaciones {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #fef3c7;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #92400e;
+
+  .label {
+    font-weight: 600;
+  }
+}
+
+// Loading & empty states
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+.no-data {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+  background: #ffffffd9;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+}

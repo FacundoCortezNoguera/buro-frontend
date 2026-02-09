@@ -1,0 +1,143 @@
+<div class="pagos-dia">
+  <div class="topbar">
+    <mat-form-field appearance="outline" class="cargo-filter">
+      <mat-label>Filtrar por cargo</mat-label>
+      <mat-select [(value)]="cargoFiltro">
+        <mat-option value="Todos">Todos</mat-option>
+        <mat-option *ngFor="let c of cargosDisponibles" [value]="c">{{ c }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="period-box" *ngIf="resumen">
+      <div class="period-title">
+        Período: {{ resumen.fechaDesde }} al {{ resumen.fechaHasta }}
+      </div>
+
+      <button mat-raised-button (click)="cargar()">
+        <mat-icon>refresh</mat-icon>
+        Actualizar
+      </button>
+
+      <button mat-raised-button color="accent" (click)="cerrarPeriodo()" [disabled]="generandoReporte">
+        <mat-icon>{{ generandoReporte ? 'hourglass_empty' : 'done_all' }}</mat-icon>
+        {{ generandoReporte ? 'Generando reporte...' : 'Cerrar período y enviar reporte' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Cargando...</span>
+  </div>
+
+  <!-- Totales generales -->
+  <mat-card class="cash-card" *ngIf="resumen && !loading">
+    <div class="cash-header">
+      <div>
+        <div class="cash-title">Total a pagar este período</div>
+        <div class="cash-total">$ {{ resumen.totalPeriodo | number:'1.0-0' }}</div>
+      </div>
+      <div *ngIf="resumen.totalPendienteAnterior > 0" class="pending-previous">
+        <div class="cash-title warn">Pendiente de períodos anteriores</div>
+        <div class="cash-total warn">$ {{ resumen.totalPendienteAnterior | number:'1.0-0' }}</div>
+      </div>
+      <div>
+        <div class="cash-title">TOTAL GENERAL</div>
+        <div class="cash-total highlight">$ {{ resumen.totalGeneral | number:'1.0-0' }}</div>
+      </div>
+    </div>
+
+    <div class="cash-breakdown" *ngIf="resumen.totalGeneral > 0">
+      <div class="bd-title">Billetes sugeridos</div>
+      <div class="bd-items">
+        <span class="bd-chip" *ngFor="let b of desgloseBilletes(resumen.totalGeneral)">
+          {{ b.cant }} x ${{ b.denom | number:'1.0-0' }}
+        </span>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Cards por empleado -->
+  <div class="grid" *ngIf="!loading && empleadosFiltrados.length > 0; else noData">
+    <mat-card class="emp-card" *ngFor="let emp of empleadosFiltrados">
+      <mat-card-title>{{ emp.empleadoNombre }}</mat-card-title>
+      <mat-card-subtitle>{{ emp.cargo }} · {{ emp.tipoPago === 'DIA' ? 'Por día' : 'Por hora' }}</mat-card-subtitle>
+
+      <mat-card-content>
+        <div class="summary">
+          <div>
+            <div class="label">Días trabajados</div>
+            <div class="value">{{ emp.diasTrabajados }}</div>
+          </div>
+
+          <div>
+            <div class="label">Total período</div>
+            <div class="value">$ {{ emp.totalPeriodo | number:'1.0-0' }}</div>
+          </div>
+
+          <div *ngIf="emp.totalPendienteAnterior > 0">
+            <div class="label">Pendiente anterior</div>
+            <div class="value warn">$ {{ emp.totalPendienteAnterior | number:'1.0-0' }}</div>
+          </div>
+
+          <div>
+            <div class="label">Total a cobrar</div>
+            <div class="value highlight">$ {{ emp.totalACobrar | number:'1.0-0' }}</div>
+          </div>
+        </div>
+
+        <!-- Desglose por día -->
+        <div class="items" *ngIf="emp.diasPeriodo.length > 0">
+          <div class="item" *ngFor="let dia of emp.diasPeriodo" [class.pagado]="dia.pagado">
+            <div class="left">
+              <div class="date">{{ dia.fecha }}</div>
+              <div class="hora">
+                <mat-icon>schedule</mat-icon>
+                {{ dia.horaLlegada }}
+                <span class="estado-chip" [ngClass]="getEstadoClass(dia.estado)">{{ dia.estado }}</span>
+              </div>
+              <div class="amount">
+                $ {{ dia.montoTotal | number:'1.0-0' }}
+              </div>
+            </div>
+            <div class="right">
+              <span class="badge" [class.ok]="dia.pagado" [class.pend]="!dia.pagado">
+                {{ dia.pagado ? 'PAGADO' : 'PENDIENTE' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Extras -->
+        <div class="extras" *ngIf="emp.extras && emp.extras.length > 0">
+          <div class="extras-title">Extras</div>
+          <mat-chip-set>
+            <mat-chip *ngFor="let extra of emp.extras">
+              {{ extra.descripcion }}
+              <span *ngIf="extra.monto > 0"> (+${{ extra.monto | number:'1.0-0' }})</span>
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="marcarEmpleadoCobrado(emp)"
+          [disabled]="emp.totalACobrar === 0"
+        >
+          <mat-icon>done</mat-icon>
+          Marcar cobrado
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <ng-template #noData>
+    <div class="no-data" *ngIf="!loading">
+      No hay pagos pendientes para este período.
+    </div>
+  </ng-template>
+</div>

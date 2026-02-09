@@ -1,0 +1,103 @@
+<div class="aprobar-container">
+  <div class="logo-header">
+    <h1>BURO</h1>
+    <p>Sistema de Gestión</p>
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span>Cargando detalles del cambio...</span>
+    </div>
+  } @else if (error) {
+    <mat-card class="result-card error-card">
+      <mat-card-content>
+        <mat-icon class="result-icon error">error_outline</mat-icon>
+        <h2>Error</h2>
+        <p>{{ error }}</p>
+      </mat-card-content>
+    </mat-card>
+  } @else if (resultado) {
+    <mat-card class="result-card" [class.aprobado]="resultado === 'aprobado'" [class.rechazado]="resultado === 'rechazado'">
+      <mat-card-content>
+        @if (resultado === 'aprobado') {
+          <mat-icon class="result-icon success">check_circle</mat-icon>
+          <h2>Cambio Aprobado</h2>
+          <p>El cambio fue aprobado y aplicado correctamente.</p>
+        } @else {
+          <mat-icon class="result-icon rejected">cancel</mat-icon>
+          <h2>Cambio Rechazado</h2>
+          <p>El cambio fue rechazado. No se realizaron modificaciones.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+  } @else if (cambio) {
+    @if (yaResuelto) {
+      <mat-card class="result-card">
+        <mat-card-content>
+          <mat-icon class="result-icon info">info</mat-icon>
+          <h2>Cambio ya procesado</h2>
+          <p>Este cambio ya fue <strong>{{ cambio.estado === 'ACEPTADO' ? 'aprobado' : cambio.estado === 'RECHAZADO' ? 'rechazado' : 'procesado' }}</strong>.</p>
+        </mat-card-content>
+      </mat-card>
+    } @else {
+      <mat-card class="cambio-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="header-icon">swap_horiz</mat-icon>
+          <mat-card-title>Solicitud de Cambio</mat-card-title>
+          <mat-card-subtitle>{{ getTipoCambioLabel(cambio.tipoCambio) }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="detail-grid">
+            <div class="detail-row">
+              <span class="label">Empleado</span>
+              <span class="value">{{ cambio.empleadoNombre }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Tipo de cambio</span>
+              <span class="value">{{ getTipoCambioLabel(cambio.tipoCambio) }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Campo</span>
+              <span class="value">{{ cambio.campoModificado }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Valor anterior</span>
+              <span class="value old-value">{{ cambio.valorAnterior || 'N/A' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Valor nuevo</span>
+              <span class="value new-value">{{ cambio.valorNuevo }}</span>
+            </div>
+            @if (cambio.descripcion) {
+              <div class="detail-row">
+                <span class="label">Descripción</span>
+                <span class="value">{{ cambio.descripcion }}</span>
+              </div>
+            }
+            <div class="detail-row">
+              <span class="label">Solicitado por</span>
+              <span class="value">{{ cambio.solicitadoPor }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          @if (processing) {
+            <mat-spinner diameter="30"></mat-spinner>
+          } @else {
+            <button mat-raised-button class="btn-aprobar" (click)="aprobar()">
+              <mat-icon>check</mat-icon>
+              Aprobar
+            </button>
+            <button mat-raised-button class="btn-rechazar" (click)="rechazar()">
+              <mat-icon>close</mat-icon>
+              Rechazar
+            </button>
+          }
+        </mat-card-actions>
+      </mat-card>
+    }
+  }
+</div>

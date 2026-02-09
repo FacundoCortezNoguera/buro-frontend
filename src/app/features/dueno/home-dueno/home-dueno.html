@@ -1,0 +1,250 @@
+<mat-toolbar color="primary" class="toolbar">
+  <span class="toolbar-title">Buro · Panel del Dueño</span>
+  <span class="toolbar-spacer"></span>
+  <span class="user-name">{{ userName }}</span>
+  <button mat-icon-button aria-label="Cerrar sesión" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="home-container">
+  <!-- Header con selector de período -->
+  <div class="page-header">
+    <div class="header-text">
+      <h1>Dashboard Ejecutivo</h1>
+      <p class="subtitle">Resumen financiero y estadísticas del personal</p>
+    </div>
+    <mat-button-toggle-group
+      [value]="periodoSeleccionado"
+      (change)="cambiarPeriodo($event)"
+      class="periodo-selector">
+      <mat-button-toggle value="SEMANA">Semana</mat-button-toggle>
+      <mat-button-toggle value="MES">Mes</mat-button-toggle>
+      <mat-button-toggle value="AÑO">Año</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span>Cargando información...</span>
+    </div>
+  } @else {
+    <!-- MÓDULO: Resumen Financiero -->
+    <section class="modulo">
+      <h2 class="modulo-titulo">
+        <mat-icon>payments</mat-icon>
+        Resumen Financiero
+      </h2>
+      <div class="cards-grid three-cols">
+        <mat-card class="stat-card">
+          <mat-card-header>
+            <div mat-card-avatar class="card-icon sueldos-icon">
+              <mat-icon>account_balance_wallet</mat-icon>
+            </div>
+            <mat-card-title>{{ formatMonto(resumen?.totalGastadoSueldos) }}</mat-card-title>
+            <mat-card-subtitle>Total en Sueldos</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-header>
+            <div mat-card-avatar class="card-icon pagado-icon">
+              <mat-icon>check_circle</mat-icon>
+            </div>
+            <mat-card-title>{{ formatMonto(resumen?.totalPagado) }}</mat-card-title>
+            <mat-card-subtitle>Pagado</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+
+        <mat-card class="stat-card pendiente">
+          <mat-card-header>
+            <div mat-card-avatar class="card-icon pendiente-icon">
+              <mat-icon>pending</mat-icon>
+            </div>
+            <mat-card-title>{{ formatMonto(resumen?.totalPendiente) }}</mat-card-title>
+            <mat-card-subtitle>Pendiente de Pago</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+    </section>
+
+    <!-- MÓDULO: Empleados y Puntualidad -->
+    <section class="modulo">
+      <h2 class="modulo-titulo">
+        <mat-icon>groups</mat-icon>
+        Empleados y Puntualidad
+      </h2>
+      <div class="cards-grid two-cols">
+        <!-- Card Empleados -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-card-title>Empleados Activos</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="stats-row">
+              <div class="stat-item">
+                <span class="stat-number">{{ resumen?.empleadosActivos || 0 }}</span>
+                <span class="stat-label">Total</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{{ resumen?.empleadosPorDia || 0 }}</span>
+                <span class="stat-label">Por Día</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{{ resumen?.empleadosPorHora || 0 }}</span>
+                <span class="stat-label">Por Hora</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Card Puntualidad -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-card-title>Puntualidad General</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="puntualidad-display">
+              <span class="puntualidad-value">{{ formatPorcentaje(resumen?.porcentajePuntualidad) }}</span>
+              <div class="puntualidad-detalle">
+                <span class="detalle puntual">{{ resumen?.asistenciasPuntuales || 0 }} puntuales</span>
+                <span class="detalle tarde">{{ resumen?.asistenciasTarde || 0 }} tarde</span>
+                <span class="detalle temprano">{{ resumen?.asistenciasTemprano || 0 }} temprano</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Alertas (si hay) -->
+      @if (alertas.length > 0) {
+        <mat-card class="alertas-card">
+          <mat-card-header>
+            <div mat-card-avatar class="card-icon alerta-icon">
+              <mat-icon>warning</mat-icon>
+            </div>
+            <mat-card-title>Alertas</mat-card-title>
+            <mat-card-subtitle>{{ alertas.length }} empleado(s) requieren atención</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="alertas-list">
+              @for (alerta of alertas; track alerta.empleadoId) {
+                <div class="alerta-row">
+                  <span class="alerta-nombre">{{ alerta.nombreCompleto }}</span>
+                  <span class="alerta-desc">{{ alerta.descripcion }}</span>
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+
+      <!-- Rankings -->
+      <div class="cards-grid two-cols">
+        <mat-card class="ranking-card">
+          <mat-card-header>
+            <div mat-card-avatar class="card-icon gold-icon">
+              <mat-icon>emoji_events</mat-icon>
+            </div>
+            <mat-card-title>Top Puntuales</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (topPuntuales.length === 0) {
+              <p class="empty-msg">Sin datos en este período</p>
+            } @else {
+              <ol class="ranking-list">
+                @for (emp of topPuntuales; track emp.empleadoId) {
+                  <li>
+                    <span class="nombre">{{ emp.nombreCompleto }}</span>
+                    <span class="valor success">{{ emp.porcentajePuntualidad | number:'1.0-0' }}%</span>
+                  </li>
+                }
+              </ol>
+            }
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="ranking-card">
+          <mat-card-header>
+            <div mat-card-avatar class="card-icon warn-icon">
+              <mat-icon>schedule</mat-icon>
+            </div>
+            <mat-card-title>Más Tardanzas</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (masTardanzas.length === 0) {
+              <p class="empty-msg">Sin tardanzas en este período</p>
+            } @else {
+              <ol class="ranking-list">
+                @for (emp of masTardanzas; track emp.empleadoId) {
+                  <li>
+                    <span class="nombre">{{ emp.nombreCompleto }}</span>
+                    <span class="valor warn">{{ emp.asistenciasTarde }} días</span>
+                  </li>
+                }
+              </ol>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </section>
+
+    <!-- MÓDULO: Reportes -->
+    <section class="modulo">
+      <h2 class="modulo-titulo">
+        <mat-icon>description</mat-icon>
+        Reportes
+      </h2>
+      <mat-card class="reportes-card">
+        <mat-card-header>
+          <mat-card-title>Últimos Reportes</mat-card-title>
+          <mat-card-subtitle>Cierres de noche recientes</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          @if (ultimosReportes.length === 0) {
+            <div class="empty-state">
+              <mat-icon>description</mat-icon>
+              <p>No hay reportes recientes</p>
+            </div>
+          } @else {
+            <table class="reportes-table">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Título</th>
+                  <th>Empleados</th>
+                  <th>Total</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (reporte of ultimosReportes; track reporte.id) {
+                  <tr>
+                    <td>{{ formatFecha(reporte.fechaReporte) }}</td>
+                    <td>{{ reporte.titulo }}</td>
+                    <td class="center">{{ reporte.cantidadEmpleados }}</td>
+                    <td class="monto">{{ formatMonto(reporte.totalMonto) }}</td>
+                    <td class="center">
+                      @if (reporte.enviado) {
+                        <mat-icon class="estado-enviado">check_circle</mat-icon>
+                      } @else {
+                        <mat-icon class="estado-pendiente">schedule</mat-icon>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" [routerLink]="['/dueno/reportes']">
+            <mat-icon>visibility</mat-icon>
+            Ver todos los reportes
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </section>
+  }
+</div>

@@ -1,0 +1,147 @@
+<app-toolbar title="Gestión de Cargos y Sueldos" backRoute="/home-admin"></app-toolbar>
+
+<div class="sueldos-container">
+  <!-- Formulario de nuevo/editar cargo -->
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>
+        @if (editingId) {
+          Editar Cargo
+        } @else if (showForm) {
+          Nuevo Cargo
+        } @else {
+          Cargos del Sistema
+        }
+      </mat-card-title>
+      <span class="spacer"></span>
+      <button mat-raised-button [color]="showForm ? 'warn' : 'primary'" (click)="toggleForm()">
+        <mat-icon>{{ showForm ? 'close' : 'add' }}</mat-icon>
+        {{ showForm ? 'Cancelar' : 'Nuevo Cargo' }}
+      </button>
+    </mat-card-header>
+
+    @if (showForm) {
+      <mat-card-content class="form-content">
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre del cargo</mat-label>
+            <input matInput [(ngModel)]="nuevoCargo.cargo" placeholder="Ej: Camarero">
+            <mat-icon matPrefix>work</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de pago</mat-label>
+            <mat-select [(ngModel)]="nuevoCargo.tipoPago">
+              <mat-option value="DIA">Por día (fijo)</mat-option>
+              <mat-option value="HORA">Por hora</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>payments</mat-icon>
+          </mat-form-field>
+
+          @if (nuevoCargo.tipoPago === 'HORA') {
+            <mat-form-field appearance="outline">
+              <mat-label>Monto por hora</mat-label>
+              <input matInput type="number" [(ngModel)]="nuevoCargo.montoPorHora" min="0" step="100">
+              <span matPrefix>$&nbsp;</span>
+              <span matSuffix>/hora</span>
+            </mat-form-field>
+          } @else {
+            <mat-form-field appearance="outline">
+              <mat-label>Monto por día</mat-label>
+              <input matInput type="number" [(ngModel)]="nuevoCargo.montoPorDia" min="0" step="500">
+              <span matPrefix>$&nbsp;</span>
+              <span matSuffix>/día</span>
+            </mat-form-field>
+          }
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" (click)="guardar()" [disabled]="saving">
+            <mat-icon>save</mat-icon>
+            {{ editingId ? 'Guardar cambios' : 'Crear cargo' }}
+          </button>
+        </div>
+      </mat-card-content>
+    }
+  </mat-card>
+
+  <!-- Tabla de cargos -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      @if (loading) {
+        <div class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+          <span>Cargando cargos...</span>
+        </div>
+      } @else {
+        <table mat-table [dataSource]="tarifas" class="tarifas-table">
+          <!-- Cargo Column -->
+          <ng-container matColumnDef="cargo">
+            <th mat-header-cell *matHeaderCellDef>Cargo</th>
+            <td mat-cell *matCellDef="let tarifa">
+              <div class="cargo-cell">
+                <mat-icon class="cargo-icon">work</mat-icon>
+                <span class="cargo-name">{{ tarifa.cargo }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Tipo Pago Column -->
+          <ng-container matColumnDef="tipoPago">
+            <th mat-header-cell *matHeaderCellDef>Tipo de Pago</th>
+            <td mat-cell *matCellDef="let tarifa">
+              <span class="tipo-chip" [class]="'tipo-' + tarifa.tipoPago.toLowerCase()">
+                {{ getTipoPagoLabel(tarifa.tipoPago) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Monto Column -->
+          <ng-container matColumnDef="monto">
+            <th mat-header-cell *matHeaderCellDef>Monto Base</th>
+            <td mat-cell *matCellDef="let tarifa">
+              <span class="monto">{{ getMonto(tarifa) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Acciones Column -->
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let tarifa">
+              <button mat-icon-button color="primary" (click)="editarCargo(tarifa)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="eliminar(tarifa)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        @if (tarifas.length === 0) {
+          <div class="empty-state">
+            <mat-icon>work_off</mat-icon>
+            <p>No hay cargos registrados</p>
+          </div>
+        }
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="info-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>info</mat-icon>
+      <mat-card-title>Información</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li><strong>Por día:</strong> Empleados con tarifa fija diaria (ej: Seguridad, DJ, Cajero).</li>
+        <li><strong>Por hora:</strong> Empleados que cobran por hora trabajada (ej: Mantenimiento).</li>
+        <li>Al crear un empleado, el tipo de pago se hereda del cargo.</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>

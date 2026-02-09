@@ -1,0 +1,178 @@
+<app-toolbar title="Destinatarios de Notificaciones" backRoute="/admin/configuracion"></app-toolbar>
+
+<div class="destinatarios-container">
+  <!-- Formulario -->
+  <mat-card class="form-card" [class.expanded]="showForm">
+    <mat-card-header>
+      <mat-card-title>
+        @if (showForm) {
+          {{ editingId ? 'Editar Destinatario' : 'Nuevo Destinatario' }}
+        } @else {
+          Destinatarios
+        }
+      </mat-card-title>
+      <span class="spacer"></span>
+      <button mat-raised-button [color]="showForm ? 'warn' : 'primary'" (click)="toggleForm()">
+        <mat-icon>{{ showForm ? 'close' : 'person_add' }}</mat-icon>
+        {{ showForm ? 'Cancelar' : 'Agregar Destinatario' }}
+      </button>
+    </mat-card-header>
+
+    @if (showForm) {
+      <mat-card-content class="form-content">
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput [(ngModel)]="nuevoDestinatario.nombre" placeholder="ej: Juan Pérez">
+            <mat-icon matPrefix>person</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" [(ngModel)]="nuevoDestinatario.email" placeholder="ej: juan@empresa.com">
+            <mat-icon matPrefix>email</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="suscripciones-section">
+          <p class="section-label">Notificaciones que recibe:</p>
+          <div class="checkbox-group">
+            <mat-checkbox [(ngModel)]="nuevoDestinatario.recibeCierreNoche" color="primary">
+              Cierre de Noche
+            </mat-checkbox>
+            <mat-checkbox [(ngModel)]="nuevoDestinatario.recibeReportesMensuales" color="primary">
+              Reportes Mensuales
+            </mat-checkbox>
+            <mat-checkbox [(ngModel)]="nuevoDestinatario.recibeCambiosEmpleados" color="primary">
+              Cambios de Empleados
+            </mat-checkbox>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" (click)="guardar()" [disabled]="saving">
+            <mat-icon>save</mat-icon>
+            {{ editingId ? 'Actualizar' : 'Crear' }}
+          </button>
+        </div>
+      </mat-card-content>
+    }
+  </mat-card>
+
+  <!-- Tabla -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      @if (loading) {
+        <div class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+          <span>Cargando destinatarios...</span>
+        </div>
+      } @else if (destinatarios.length === 0) {
+        <div class="empty-state">
+          <mat-icon>mail_outline</mat-icon>
+          <p>No hay destinatarios configurados</p>
+          <p class="hint">Agregá un destinatario para empezar a enviar notificaciones</p>
+        </div>
+      } @else {
+        <table mat-table [dataSource]="destinatarios" class="destinatarios-table">
+          <!-- Nombre -->
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let dest">
+              <div class="name-cell">
+                <mat-icon class="name-icon">person</mat-icon>
+                <span>{{ dest.nombre }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Email -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let dest">{{ dest.email }}</td>
+          </ng-container>
+
+          <!-- Cierre Noche -->
+          <ng-container matColumnDef="cierreNoche">
+            <th mat-header-cell *matHeaderCellDef>Cierre Noche</th>
+            <td mat-cell *matCellDef="let dest">
+              <mat-checkbox
+                [checked]="dest.recibeCierreNoche"
+                (change)="toggleSuscripcion(dest, 'recibeCierreNoche')"
+                color="primary">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Mensuales -->
+          <ng-container matColumnDef="mensuales">
+            <th mat-header-cell *matHeaderCellDef>Mensuales</th>
+            <td mat-cell *matCellDef="let dest">
+              <mat-checkbox
+                [checked]="dest.recibeReportesMensuales"
+                (change)="toggleSuscripcion(dest, 'recibeReportesMensuales')"
+                color="primary">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Cambios -->
+          <ng-container matColumnDef="cambios">
+            <th mat-header-cell *matHeaderCellDef>Cambios</th>
+            <td mat-cell *matCellDef="let dest">
+              <mat-checkbox
+                [checked]="dest.recibeCambiosEmpleados"
+                (change)="toggleSuscripcion(dest, 'recibeCambiosEmpleados')"
+                color="primary">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Activo -->
+          <ng-container matColumnDef="activo">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let dest">
+              <mat-slide-toggle
+                [checked]="dest.activo"
+                (change)="toggleActivo(dest)"
+                color="primary">
+                {{ dest.activo ? 'Activo' : 'Inactivo' }}
+              </mat-slide-toggle>
+            </td>
+          </ng-container>
+
+          <!-- Acciones -->
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let dest">
+              <button mat-icon-button color="primary" (click)="editar(dest)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="eliminar(dest)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Info -->
+  <mat-card class="info-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>info</mat-icon>
+      <mat-card-title>Tipos de Notificaciones</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li><strong>Cierre de Noche:</strong> Recibe el reporte PDF del cierre nocturno.</li>
+        <li><strong>Reportes Mensuales:</strong> Recibe los reportes mensuales de resumen.</li>
+        <li><strong>Cambios de Empleados:</strong> Recibe solicitudes de aprobación para cambios de cargo, sueldo, etc.</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>
